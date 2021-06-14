@@ -54,6 +54,11 @@ webauthn-server-attestation:
 
 * Added attestation metadata for YubiKey Bio.
 
+Fixes:
+
+* Added missing JavaDoc for `id` and `name` methods of initial
+  `RelyingPartyIdentityBuilder` stages.
+
 
 == Version 1.9.1 ==
 
