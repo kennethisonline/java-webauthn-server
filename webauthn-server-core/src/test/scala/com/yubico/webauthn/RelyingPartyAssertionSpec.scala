@@ -166,7 +166,6 @@ class RelyingPartyAssertionSpec
         ),
       allowOriginPort: Boolean = false,
       allowOriginSubdomain: Boolean = false,
-      allowUnrequestedExtensions: Boolean = false,
       authenticatorData: ByteArray = Defaults.authenticatorData,
       callerTokenBindingId: Option[ByteArray] = None,
       challenge: ByteArray = Defaults.challenge,
@@ -268,7 +267,6 @@ class RelyingPartyAssertionSpec
       .allowOriginPort(allowOriginPort)
       .allowOriginSubdomain(allowOriginSubdomain)
       .allowUntrustedAttestation(false)
-      .allowUnrequestedExtensions(allowUnrequestedExtensions)
       .validateSignatureCounter(validateSignatureCounter)
 
     origins.map(_.asJava).foreach(builder.origins _)

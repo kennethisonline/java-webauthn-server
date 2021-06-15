@@ -112,7 +112,6 @@ class RelyingPartyRegistrationSpec
   private def finishRegistration(
       allowOriginPort: Boolean = false,
       allowOriginSubdomain: Boolean = false,
-      allowUnrequestedExtensions: Boolean = false,
       allowUntrustedAttestation: Boolean = false,
       callerTokenBindingId: Option[ByteArray] = None,
       credentialRepository: CredentialRepository =
@@ -134,7 +133,6 @@ class RelyingPartyRegistrationSpec
       .preferredPubkeyParams(preferredPubkeyParams.asJava)
       .allowOriginPort(allowOriginPort)
       .allowOriginSubdomain(allowOriginSubdomain)
-      .allowUnrequestedExtensions(allowUnrequestedExtensions)
       .allowUntrustedAttestation(allowUntrustedAttestation)
 
     metadataService.foreach { mds => builder = builder.metadataService(mds) }
@@ -3279,7 +3277,6 @@ class RelyingPartyRegistrationSpec
               .build()
           )
           .credentialRepository(Helpers.CredentialRepository.empty)
-          .allowUnrequestedExtensions(true)
           .build()
         val user = UserIdentity.builder
           .name("foo")
