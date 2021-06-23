@@ -75,6 +75,7 @@ import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 import java.io.IOException
 import java.nio.charset.Charset
+import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.MessageDigest
 import java.security.PrivateKey
@@ -2989,13 +2990,19 @@ class RelyingPartyRegistrationSpec
             )
           }
 
-          it("EdDSA.") {
-            pubKeyCredParams should contain(
-              PublicKeyCredentialParameters.EdDSA
-            )
-            pubKeyCredParams map (_.getAlg) should contain(
-              COSEAlgorithmIdentifier.EdDSA
-            )
+          if (Try(KeyFactory.getInstance("EdDSA")).isSuccess) {
+            it("EdDSA, when available.") {
+              pubKeyCredParams should contain(
+                PublicKeyCredentialParameters.EdDSA
+              )
+              pubKeyCredParams map (_.getAlg) should contain(
+                COSEAlgorithmIdentifier.EdDSA
+              )
+            }
+          } else {
+            ignore(
+              "EdDSA, if available (but it is not in this test environment)."
+            ) {}
           }
 
           it("RS256.") {
