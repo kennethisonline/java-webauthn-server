@@ -1,5 +1,11 @@
 == Version 1.11.0 (unreleased) ==
 
+Deprecated features:
+* The `icon` field in `RelyingPartyIdentity` and `UserIdentity`, and its
+  associated methods, are now deprecated. The corresponding property was removed
+  in WebAuthn Level 2, and will be removed in the next major version of the
+  library.
+
 Changes:
 
 * `RelyingParty.appId` setting now also activates the `appidExclude` extension in
