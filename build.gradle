@@ -86,12 +86,22 @@ allprojects {
 }
 
 subprojects {
-  apply plugin: LombokPlugin
+  if (
+    [
+      'webauthn-server-attestation',
+      'webauthn-server-core-minimal',
+      'webauthn-server-demo',
+      'yubico-util',
+    ].contains(project.name)
+  ) {
+    apply plugin: LombokPlugin
 
-  lombok {
-    version '1.18.18'
-    sha256 = '601ec46206e0f9cac2c0583b3350e79f095419c395e991c761640f929038e9cc'
+    lombok {
+      version '1.18.18'
+      sha256 = '601ec46206e0f9cac2c0583b3350e79f095419c395e991c761640f929038e9cc'
+    }
   }
+
   tasks.withType(AbstractCompile) {
     if (tasks.findByName('verifyLombok')) {
       dependsOn tasks.verifyLombok
@@ -180,26 +190,29 @@ subprojects { project ->
       from sourceSets.main.allSource
     }
 
-    task delombok(type: DelombokTask, dependsOn: classes) {
-      ext.outputDir = file("${buildDir}/delombok")
-      outputs.dir outputDir
-      sourceSets.main.java.srcDirs.each {
-        if (!it.exists()) {
-          it.mkdirs()
-        }
-        inputs.dir it
-        args(it, '-d', outputDir)
-      }
-      doFirst {
-        outputDir.deleteDir()
-      }
-    }
-
     javadoc {
-      dependsOn delombok
-      source = delombok.outputDir
       options.encoding = 'UTF-8'
       options.addStringOption('charset', 'UTF-8')
+    }
+
+    if (project.plugins.hasPlugin(LombokPlugin.class)) {
+      task delombok(type: DelombokTask, dependsOn: classes) {
+        ext.outputDir = file("${buildDir}/delombok")
+        outputs.dir outputDir
+        sourceSets.main.java.srcDirs.each {
+          if (!it.exists()) {
+            it.mkdirs()
+          }
+          inputs.dir it
+          args(it, '-d', outputDir)
+        }
+        doFirst {
+          outputDir.deleteDir()
+        }
+      }
+
+      javadoc.dependsOn delombok
+      javadoc.source = delombok.outputDir
     }
 
     task javadocJar(type: Jar) {
