@@ -24,12 +24,6 @@ jobs:
     - name: Run cleanTest
       run: ./gradlew cleanTest
 
-    - name: Run tests in webauthn-server-attestation
-      run: ./gradlew :webauthn-server-attestation:test
-
-    - name: Run tests in webauthn-server-demo
-      run: ./gradlew :webauthn-server-demo:test
-
     - name: Run tests in webauthn-server-core
       run: ./gradlew :webauthn-server-core-minimal:test
 
