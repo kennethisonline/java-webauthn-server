@@ -21,8 +21,17 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
 
-    - name: Run tests
-      run: ./gradlew cleanTest test
+    - name: Run cleanTest
+      run: ./gradlew cleanTest
+
+    - name: Run tests in webauthn-server-attestation
+      run: ./gradlew :webauthn-server-attestation:test
+
+    - name: Run tests in webauthn-server-demo
+      run: ./gradlew :webauthn-server-demo:test
+
+    #- name: Run tests in webauthn-server-core
+      #run: ./gradlew :webauthn-server-core-minimal:test
 
     - name: Archive HTML test report
       if: ${{ always() }}
