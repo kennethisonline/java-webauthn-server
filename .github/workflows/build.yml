@@ -30,8 +30,8 @@ jobs:
     - name: Run tests in webauthn-server-demo
       run: ./gradlew :webauthn-server-demo:test
 
-    #- name: Run tests in webauthn-server-core
-      #run: ./gradlew :webauthn-server-core-minimal:test
+    - name: Run tests in webauthn-server-core
+      run: ./gradlew :webauthn-server-core-minimal:test
 
     - name: Archive HTML test report
       if: ${{ always() }}
