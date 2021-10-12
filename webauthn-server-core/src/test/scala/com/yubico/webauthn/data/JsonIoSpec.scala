@@ -115,15 +115,6 @@ class JsonIoSpec
     test(new TypeReference[AttestationObject]() {})
     test(new TypeReference[AttestationType]() {})
     test(new TypeReference[AttestedCredentialData]() {})
-    test(new TypeReference[AuthenticatorAssertionResponse]() {})
-    test(new TypeReference[AuthenticatorAttachment]() {})
-    test(new TypeReference[AuthenticatorAttestationResponse]() {})
-    test(new TypeReference[AuthenticatorData]() {})
-    test(new TypeReference[AuthenticatorDataFlags]() {})
-    test(new TypeReference[AuthenticatorSelectionCriteria]() {})
-    test(new TypeReference[AuthenticatorTransport]() {})
-    test(new TypeReference[CollectedClientData]() {})
-    test(new TypeReference[COSEAlgorithmIdentifier]() {})
   }
 
 }
