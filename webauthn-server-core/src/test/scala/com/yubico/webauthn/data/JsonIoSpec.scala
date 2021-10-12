@@ -371,19 +371,4 @@ class JsonIoSpec
     }
   }
 
-  describe("The class PublicKeyCredentialCreationOptions") {
-    it("""has a toCredentialsCreateJson() method which returns a JSON object with the PublicKeyCredentialCreationOptions set as a top-level "publicKey" property.""") {
-      forAll { pkcco: PublicKeyCredentialCreationOptions =>
-        println(pkcco)
-        val jsonValue =
-          JacksonCodecs.json.readTree(pkcco.toCredentialsCreateJson)
-        jsonValue.get("publicKey") should not be null
-        JacksonCodecs.json.treeToValue(
-          jsonValue.get("publicKey"),
-          classOf[PublicKeyCredentialCreationOptions],
-        ) should equal(pkcco)
-      }
-    }
-  }
-
 }
