@@ -108,7 +108,6 @@ class JsonIoSpec
     }
 
     test(new TypeReference[AppId]() {})
-    test(new TypeReference[AssertionExtensionInputs]() {})
     test(new TypeReference[AssertionRequest]() {})
     test(new TypeReference[AssertionResult]() {})
     test(new TypeReference[Attestation]() {})
@@ -123,8 +122,6 @@ class JsonIoSpec
     test(new TypeReference[AuthenticatorDataFlags]() {})
     test(new TypeReference[AuthenticatorSelectionCriteria]() {})
     test(new TypeReference[AuthenticatorTransport]() {})
-    test(new TypeReference[ClientAssertionExtensionOutputs]() {})
-    test(new TypeReference[ClientRegistrationExtensionOutputs]() {})
     test(new TypeReference[CollectedClientData]() {})
     test(new TypeReference[COSEAlgorithmIdentifier]() {})
   }
