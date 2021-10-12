@@ -109,9 +109,6 @@ class JsonIoSpec
 
     test(new TypeReference[AuthenticatorAssertionResponse]() {})
     test(new TypeReference[AuthenticatorAttachment]() {})
-    test(new TypeReference[AuthenticatorAttestationResponse]() {})
-    test(new TypeReference[AuthenticatorData]() {})
-    test(new TypeReference[AuthenticatorDataFlags]() {})
   }
 
 }
