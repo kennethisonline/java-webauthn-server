@@ -127,32 +127,6 @@ class JsonIoSpec
     test(new TypeReference[ClientRegistrationExtensionOutputs]() {})
     test(new TypeReference[CollectedClientData]() {})
     test(new TypeReference[COSEAlgorithmIdentifier]() {})
-    test(
-      new TypeReference[PublicKeyCredential[
-        AuthenticatorAssertionResponse,
-        ClientAssertionExtensionOutputs,
-      ]]() {}
-    )
-    test(
-      new TypeReference[PublicKeyCredential[
-        AuthenticatorAttestationResponse,
-        ClientRegistrationExtensionOutputs,
-      ]]() {}
-    )
-    test(new TypeReference[PublicKeyCredentialCreationOptions]() {})
-    test(new TypeReference[PublicKeyCredentialDescriptor]() {})
-    test(new TypeReference[PublicKeyCredentialParameters]() {})
-    test(new TypeReference[PublicKeyCredentialRequestOptions]() {})
-    test(new TypeReference[PublicKeyCredentialType]() {})
-    test(new TypeReference[RegisteredCredential]() {})
-    test(new TypeReference[RegistrationExtensionInputs]() {})
-    test(new TypeReference[RegistrationResult]() {})
-    test(new TypeReference[RelyingPartyIdentity]() {})
-    test(new TypeReference[TokenBindingInfo]() {})
-    test(new TypeReference[TokenBindingStatus]() {})
-    test(new TypeReference[Transport]() {})
-    test(new TypeReference[UserIdentity]() {})
-    test(new TypeReference[UserVerificationRequirement]() {})
   }
 
 }
