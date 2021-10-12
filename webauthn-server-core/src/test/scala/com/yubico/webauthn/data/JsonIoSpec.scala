@@ -386,33 +386,4 @@ class JsonIoSpec
     }
   }
 
-  describe("The class PublicKeyCredentialRequestOptions") {
-    it("""has a toCredentialsGetJson() method which returns a JSON object with the PublicKeyCredentialGetOptions set as a top-level "publicKey" property.""") {
-      forAll { pkcro: PublicKeyCredentialRequestOptions =>
-        println(pkcro)
-        val jsonValue = JacksonCodecs.json.readTree(pkcro.toCredentialsGetJson)
-        jsonValue.get("publicKey") should not be null
-        JacksonCodecs.json.treeToValue(
-          jsonValue.get("publicKey"),
-          classOf[PublicKeyCredentialRequestOptions],
-        ) should equal(pkcro)
-      }
-    }
-  }
-
-  describe("The class AssertionRequest") {
-    it("""has a toCredentialsGetJson() method which returns a JSON object with the PublicKeyCredentialGetOptions set as a top-level "publicKey" property.""") {
-      forAll { req: AssertionRequest =>
-        println(req)
-
-        val jsonValue = JacksonCodecs.json.readTree(req.toCredentialsGetJson)
-        jsonValue.get("publicKey") should not be null
-        JacksonCodecs.json.treeToValue(
-          jsonValue.get("publicKey"),
-          classOf[PublicKeyCredentialRequestOptions],
-        ) should equal(req.getPublicKeyCredentialRequestOptions)
-      }
-    }
-  }
-
 }
