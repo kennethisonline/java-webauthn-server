@@ -107,7 +107,7 @@ class JsonIoSpec
       }
     }
 
-    test(new TypeReference[AuthenticatorAttachment]() {})
+    test(new TypeReference[AuthenticatorAssertionResponse]() {})
   }
 
 }
