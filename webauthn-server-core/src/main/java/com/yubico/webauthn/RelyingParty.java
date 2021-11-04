@@ -334,6 +334,11 @@ public class RelyingParty {
    */
   @Builder.Default private final boolean validateSignatureCounter = true;
 
+
+  @Builder.Default private final RelyingPartyMode mode = RelyingPartyMode.WEBAUTHN;
+
+  public enum RelyingPartyMode { WEBAUTHN, SPC };
+
   private RelyingParty(
       @NonNull RelyingPartyIdentity identity,
       Set<String> origins,
@@ -346,7 +351,8 @@ public class RelyingParty {
       boolean allowOriginSubdomain,
       boolean allowUnrequestedExtensions,
       boolean allowUntrustedAttestation,
-      boolean validateSignatureCounter) {
+      boolean validateSignatureCounter,
+      RelyingPartyMode mode) {
     this.identity = identity;
     this.origins =
         origins != null
@@ -373,6 +379,7 @@ public class RelyingParty {
     this.allowUnrequestedExtensions = allowUnrequestedExtensions;
     this.allowUntrustedAttestation = allowUntrustedAttestation;
     this.validateSignatureCounter = validateSignatureCounter;
+    this.mode = mode;
   }
 
   private static ByteArray generateChallenge() {
@@ -505,6 +512,7 @@ public class RelyingParty {
         .allowOriginSubdomain(allowOriginSubdomain)
         .allowUnrequestedExtensions(allowUnrequestedExtensions)
         .validateSignatureCounter(validateSignatureCounter)
+        .clientDataType(mode == RelyingPartyMode.WEBAUTHN ? FinishAssertionSteps.CLIENT_DATA_TYPE_WEBAUTHN : FinishAssertionSteps.CLIENT_DATA_TYPE_SPC)
         .build();
   }
 

@@ -55,7 +55,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 final class FinishAssertionSteps {
 
-  private static final String CLIENT_DATA_TYPE = "webauthn.get";
+  public static final String CLIENT_DATA_TYPE_WEBAUTHN = "webauthn.get";
+  public static final String CLIENT_DATA_TYPE_SPC = "payment.get";
 
   private final AssertionRequest request;
   private final PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs>
@@ -69,6 +70,7 @@ final class FinishAssertionSteps {
   @Builder.Default private final boolean allowOriginSubdomain = false;
   @Builder.Default private final boolean allowUnrequestedExtensions = false;
   @Builder.Default private final boolean validateSignatureCounter = true;
+  @Builder.Default private final String clientDataType = CLIENT_DATA_TYPE_WEBAUTHN;
 
   public Step0 begin() {
     return new Step0();
@@ -335,9 +337,9 @@ final class FinishAssertionSteps {
     @Override
     public void validate() {
       assure(
-          CLIENT_DATA_TYPE.equals(clientData.getType()),
+              clientDataType.equals(clientData.getType()),
           "The \"type\" in the client data must be exactly \"%s\", was: %s",
-          CLIENT_DATA_TYPE,
+              clientDataType,
           clientData.getType());
     }
 
