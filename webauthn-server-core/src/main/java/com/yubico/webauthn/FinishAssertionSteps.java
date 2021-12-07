@@ -381,10 +381,14 @@ final class FinishAssertionSteps {
 
     @Override
     public void validate() {
-      final String responseOrigin = response.getResponse().getClientData().getOrigin();
-      assure(
-          OriginMatcher.isAllowed(responseOrigin, origins, allowOriginPort, allowOriginSubdomain),
-          "Incorrect origin: " + responseOrigin);
+      // for SPC, merchants can do the authentication ceremony on behalf of the RP/Account Provider/Issuer
+      // so only do this validation for WebAuthn
+      if (CLIENT_DATA_TYPE_WEBAUTHN.equals(clientDataType)) {
+        final String responseOrigin = response.getResponse().getClientData().getOrigin();
+        assure(
+                OriginMatcher.isAllowed(responseOrigin, origins, allowOriginPort, allowOriginSubdomain),
+                "Incorrect origin: " + responseOrigin);
+      }
     }
 
     @Override
@@ -421,21 +425,25 @@ final class FinishAssertionSteps {
 
     @Override
     public void validate() {
-      try {
-        assure(
-            Crypto.sha256(rpId)
-                .equals(response.getResponse().getParsedAuthenticatorData().getRpIdHash()),
-            "Wrong RP ID hash.");
-      } catch (IllegalArgumentException e) {
-        Optional<AppId> appid =
-            request.getPublicKeyCredentialRequestOptions().getExtensions().getAppid();
-        if (appid.isPresent()) {
+      // for SPC, merchants can do the authentication ceremony on behalf of the RP/Account Provider/Issuer
+      // so only do this validation for WebAuthn
+      if (CLIENT_DATA_TYPE_WEBAUTHN.equals(clientDataType)) {
+        try {
           assure(
-              Crypto.sha256(appid.get().getId())
-                  .equals(response.getResponse().getParsedAuthenticatorData().getRpIdHash()),
-              "Wrong RP ID hash.");
-        } else {
-          throw e;
+                  Crypto.sha256(rpId)
+                          .equals(response.getResponse().getParsedAuthenticatorData().getRpIdHash()),
+                  "Wrong RP ID hash.");
+        } catch (IllegalArgumentException e) {
+          Optional<AppId> appid =
+                  request.getPublicKeyCredentialRequestOptions().getExtensions().getAppid();
+          if (appid.isPresent()) {
+            assure(
+                    Crypto.sha256(appid.get().getId())
+                            .equals(response.getResponse().getParsedAuthenticatorData().getRpIdHash()),
+                    "Wrong RP ID hash.");
+          } else {
+            throw e;
+          }
         }
       }
     }
