@@ -50,7 +50,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 @UtilityClass
 @Slf4j
-final class Crypto {
+public final class Crypto {
   // Values from
   // https://apps.nsa.gov/iaarchive/library/ia-guidance/ia-solutions-for-classified/algorithm-guidance/mathematical-routines-for-the-nist-prime-elliptic-curves.cfm
   // cross-referenced with "secp256r1" in https://www.secg.org/sec2-v2.pdf

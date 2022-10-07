@@ -42,7 +42,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 import java.util.Optional;
 
-final class WebAuthnCodecs {
+public final class WebAuthnCodecs {
 
   private static final ByteArray ED25519_CURVE_OID =
       new ByteArray(new byte[] {0x30, 0x05, 0x06, 0x03, 0x2B, 0x65, 0x70});
@@ -63,7 +63,7 @@ final class WebAuthnCodecs {
             Bytes.concat(yPadding, Arrays.copyOfRange(y, Math.max(0, y.length - 32), y.length))));
   }
 
-  static PublicKey importCosePublicKey(ByteArray key)
+  public static PublicKey importCosePublicKey(ByteArray key)
       throws CoseException, IOException, InvalidKeySpecException, NoSuchAlgorithmException {
     CBORObject cose = CBORObject.DecodeFromBytes(key.getBytes());
     final int kty = cose.get(CBORObject.FromObject(1)).AsInt32();
@@ -116,7 +116,7 @@ final class WebAuthnCodecs {
     return kFact.generatePublic(new X509EncodedKeySpec(x509Key.getBytes()));
   }
 
-  static Optional<COSEAlgorithmIdentifier> getCoseKeyAlg(ByteArray key) {
+  public static Optional<COSEAlgorithmIdentifier> getCoseKeyAlg(ByteArray key) {
     CBORObject cose = CBORObject.DecodeFromBytes(key.getBytes());
     final int alg = cose.get(CBORObject.FromObject(3)).AsInt32();
     return COSEAlgorithmIdentifier.fromId(alg);
