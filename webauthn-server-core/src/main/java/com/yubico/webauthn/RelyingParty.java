@@ -48,6 +48,7 @@ import com.yubico.webauthn.exception.RegistrationFailedException;
 import com.yubico.webauthn.extension.appid.AppId;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -382,10 +383,20 @@ public class RelyingParty {
     this.mode = mode;
   }
 
-  private static ByteArray generateChallenge() {
+  private static ByteArray generateChallenge(Optional<String> challengeExtension) {
     byte[] bytes = new byte[32];
     random.nextBytes(bytes);
-    return new ByteArray(bytes);
+
+    ByteArray challengeBytes = null;
+    if (challengeExtension.isPresent()) {
+      challengeBytes = new ByteArray(new byte[]{Integer.valueOf(32).byteValue()})
+              .concat(new ByteArray(bytes))
+              .concat(new ByteArray(challengeExtension.get().getBytes(StandardCharsets.UTF_8)));
+    } else {
+      challengeBytes = new ByteArray(bytes);
+    }
+
+    return challengeBytes;
   }
 
   public PublicKeyCredentialCreationOptions startRegistration(
@@ -394,7 +405,7 @@ public class RelyingParty {
         PublicKeyCredentialCreationOptions.builder()
             .rp(identity)
             .user(startRegistrationOptions.getUser())
-            .challenge(generateChallenge())
+            .challenge(generateChallenge(startRegistrationOptions.getChallengeExtension()))
             .pubKeyCredParams(preferredPubkeyParams)
             .excludeCredentials(
                 credentialRepository.getCredentialIdsForUsername(
@@ -449,7 +460,7 @@ public class RelyingParty {
   public AssertionRequest startAssertion(StartAssertionOptions startAssertionOptions) {
     PublicKeyCredentialRequestOptionsBuilder pkcro =
         PublicKeyCredentialRequestOptions.builder()
-            .challenge(generateChallenge())
+            .challenge(generateChallenge(startAssertionOptions.getChallengeExtension()))
             .rpId(identity.getId())
             .allowCredentials(
                 startAssertionOptions

@@ -64,6 +64,11 @@ public class StartRegistrationOptions {
   private final Long timeout;
 
   /**
+   * Additional data added to the challenge value, converted to byte array. This is optional
+   */
+  private final String challengeExtension;
+
+  /**
    * Constraints on what kind of authenticator the user is allowed to use to create the credential.
    */
   public Optional<AuthenticatorSelectionCriteria> getAuthenticatorSelection() {
@@ -84,6 +89,13 @@ public class StartRegistrationOptions {
     return Optional.ofNullable(timeout);
   }
 
+  /**
+   * Additional data added to the challenge value, converted to byte array. This is optional
+   */
+  public Optional<String> getChallengeExtension() {
+    return Optional.ofNullable(challengeExtension);
+  }
+
   public static StartRegistrationOptionsBuilder.MandatoryStages builder() {
     return new StartRegistrationOptionsBuilder.MandatoryStages();
   }
@@ -91,6 +103,7 @@ public class StartRegistrationOptions {
   public static class StartRegistrationOptionsBuilder {
     private AuthenticatorSelectionCriteria authenticatorSelection = null;
     private Long timeout = null;
+    private String challengeExtension = null;
 
     public static class MandatoryStages {
       private final StartRegistrationOptionsBuilder builder = new StartRegistrationOptionsBuilder();
@@ -149,6 +162,15 @@ public class StartRegistrationOptions {
      */
     public StartRegistrationOptionsBuilder timeout(long timeout) {
       return this.timeout(Optional.of(timeout));
+    }
+
+    public StartRegistrationOptionsBuilder challengeExtension(@NonNull Optional<String> challengeExtension) {
+      this.challengeExtension = challengeExtension.orElse(null);
+      return this;
+    }
+
+    public StartRegistrationOptionsBuilder challengeExtension(@NonNull String challengeExtension) {
+      return this.challengeExtension(Optional.of(challengeExtension));
     }
   }
 }

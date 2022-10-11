@@ -84,6 +84,11 @@ public class StartAssertionOptions {
   private final Long timeout;
 
   /**
+   * Additional data added to the challenge value, converted to byte array. This is optional
+   */
+  private final String challengeExtension;
+
+  /**
    * The username of the user to authenticate, if the user has already been identified.
    *
    * <p>If this is absent, that implies a first-factor authentication operation - meaning
@@ -123,10 +128,18 @@ public class StartAssertionOptions {
     return Optional.ofNullable(timeout);
   }
 
+  /**
+   * Additional data added to the challenge value, converted to byte array. This is optional
+   */
+  public Optional<String> getChallengeExtension() {
+    return Optional.ofNullable(challengeExtension);
+  }
+
   public static class StartAssertionOptionsBuilder {
     private String username = null;
     private UserVerificationRequirement userVerification = null;
     private Long timeout = null;
+    private String challengeExtension = null;
 
     /**
      * The username of the user to authenticate, if the user has already been identified.
@@ -214,6 +227,15 @@ public class StartAssertionOptions {
      */
     public StartAssertionOptionsBuilder timeout(long timeout) {
       return this.timeout(Optional.of(timeout));
+    }
+
+    public StartAssertionOptionsBuilder challengeExtension(@NonNull Optional<String> challengeExtension) {
+      this.challengeExtension = challengeExtension.orElse(null);
+      return this;
+    }
+
+    public StartAssertionOptionsBuilder challengeExtension(@NonNull String challengeExtension) {
+      return this.challengeExtension(Optional.of(challengeExtension));
     }
   }
 }
