@@ -43,7 +43,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-final class WebAuthnCodecs {
+public final class WebAuthnCodecs {
 
   private static final ByteArray ED25519_CURVE_OID =
       new ByteArray(new byte[] {0x30, 0x05, 0x06, 0x03, 0x2B, 0x65, 0x70});
@@ -119,7 +119,7 @@ final class WebAuthnCodecs {
     return new ByteArray(CBORObject.FromObject(coseKey).EncodeToBytes());
   }
 
-  static PublicKey importCosePublicKey(ByteArray key)
+  public static PublicKey importCosePublicKey(ByteArray key)
       throws CoseException, IOException, InvalidKeySpecException, NoSuchAlgorithmException {
     CBORObject cose = CBORObject.DecodeFromBytes(key.getBytes());
     final int kty = cose.get(CBORObject.FromObject(1)).AsInt32();

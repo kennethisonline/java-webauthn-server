@@ -343,6 +343,10 @@ public class RelyingParty {
    */
   @Builder.Default private final boolean validateSignatureCounter = true;
 
+  @Builder.Default private final RelyingPartyMode mode = RelyingPartyMode.WEBAUTHN;
+
+  public enum RelyingPartyMode { WEBAUTHN, SPC };
+
   /**
    * A {@link Clock} which will be used to tell the current time while verifying attestation
    * certificate chains.
@@ -367,6 +371,7 @@ public class RelyingParty {
       boolean allowOriginSubdomain,
       boolean allowUntrustedAttestation,
       boolean validateSignatureCounter,
+      RelyingPartyMode mode,
       Clock clock) {
     this.identity = identity;
     this.origins =
@@ -393,6 +398,7 @@ public class RelyingParty {
     this.allowOriginSubdomain = allowOriginSubdomain;
     this.allowUntrustedAttestation = allowUntrustedAttestation;
     this.validateSignatureCounter = validateSignatureCounter;
+    this.mode = mode;
     this.clock = clock;
   }
 
@@ -601,6 +607,7 @@ public class RelyingParty {
         .allowOriginPort(allowOriginPort)
         .allowOriginSubdomain(allowOriginSubdomain)
         .validateSignatureCounter(validateSignatureCounter)
+        .clientDataType(mode == RelyingPartyMode.WEBAUTHN ? FinishAssertionSteps.CLIENT_DATA_TYPE_WEBAUTHN : FinishAssertionSteps.CLIENT_DATA_TYPE_SPC)
         .build();
   }
 

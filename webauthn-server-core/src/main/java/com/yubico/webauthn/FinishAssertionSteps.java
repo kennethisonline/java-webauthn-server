@@ -54,7 +54,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 final class FinishAssertionSteps {
 
-  private static final String CLIENT_DATA_TYPE = "webauthn.get";
+  public static final String CLIENT_DATA_TYPE_WEBAUTHN = "webauthn.get";
+  public static final String CLIENT_DATA_TYPE_SPC = "payment.get";
 
   private final AssertionRequest request;
   private final PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs>
@@ -68,6 +69,7 @@ final class FinishAssertionSteps {
   @Builder.Default private final boolean allowOriginSubdomain = false;
   @Builder.Default private final boolean allowUnrequestedExtensions = false;
   @Builder.Default private final boolean validateSignatureCounter = true;
+  @Builder.Default private final String clientDataType = CLIENT_DATA_TYPE_WEBAUTHN;
 
   public Step5 begin() {
     return new Step5();
@@ -277,9 +279,9 @@ final class FinishAssertionSteps {
     @Override
     public void validate() {
       assure(
-          CLIENT_DATA_TYPE.equals(clientData.getType()),
+          clientDataType.equals(clientData.getType()),
           "The \"type\" in the client data must be exactly \"%s\", was: %s",
-          CLIENT_DATA_TYPE,
+          clientDataType,
           clientData.getType());
     }
 
@@ -317,10 +319,14 @@ final class FinishAssertionSteps {
 
     @Override
     public void validate() {
-      final String responseOrigin = response.getResponse().getClientData().getOrigin();
-      assure(
-          OriginMatcher.isAllowed(responseOrigin, origins, allowOriginPort, allowOriginSubdomain),
-          "Incorrect origin: " + responseOrigin);
+      // for SPC, merchants can do the authentication ceremony on behalf of the RP/Account Provider/Issuer
+      // so only do this validation for WebAuthn
+      if (CLIENT_DATA_TYPE_WEBAUTHN.equals(clientDataType)) {
+        final String responseOrigin = response.getResponse().getClientData().getOrigin();
+        assure(
+                OriginMatcher.isAllowed(responseOrigin, origins, allowOriginPort, allowOriginSubdomain),
+                "Incorrect origin: " + responseOrigin);
+      }
     }
 
     @Override
@@ -353,21 +359,25 @@ final class FinishAssertionSteps {
 
     @Override
     public void validate() {
-      try {
-        assure(
-            Crypto.sha256(rpId)
-                .equals(response.getResponse().getParsedAuthenticatorData().getRpIdHash()),
-            "Wrong RP ID hash.");
-      } catch (IllegalArgumentException e) {
-        Optional<AppId> appid =
-            request.getPublicKeyCredentialRequestOptions().getExtensions().getAppid();
-        if (appid.isPresent()) {
+      // for SPC, merchants can do the authentication ceremony on behalf of the RP/Account Provider/Issuer
+      // so only do this validation for WebAuthn
+      if (CLIENT_DATA_TYPE_WEBAUTHN.equals(clientDataType)) {
+        try {
           assure(
-              Crypto.sha256(appid.get().getId())
-                  .equals(response.getResponse().getParsedAuthenticatorData().getRpIdHash()),
-              "Wrong RP ID hash.");
-        } else {
-          throw e;
+                  Crypto.sha256(rpId)
+                          .equals(response.getResponse().getParsedAuthenticatorData().getRpIdHash()),
+                  "Wrong RP ID hash.");
+        } catch (IllegalArgumentException e) {
+          Optional<AppId> appid =
+                  request.getPublicKeyCredentialRequestOptions().getExtensions().getAppid();
+          if (appid.isPresent()) {
+            assure(
+                    Crypto.sha256(appid.get().getId())
+                            .equals(response.getResponse().getParsedAuthenticatorData().getRpIdHash()),
+                    "Wrong RP ID hash.");
+          } else {
+            throw e;
+          }
         }
       }
     }
